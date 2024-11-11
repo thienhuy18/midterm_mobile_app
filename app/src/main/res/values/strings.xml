@@ -1,0 +1,10 @@
+<resources>
+
+    <string name="app_name">MidTerm</string>
+
+
+    <string-array name="status_options">
+        <item>Normal</item>
+        <item>Locked</item>
+    </string-array>
+</resources>
