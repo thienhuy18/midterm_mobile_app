@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutAddStudent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#4CAF50"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btnBackFromAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/baseline_arrow_back_24"
+            android:background="#4CAF50" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="1"
+            android:text="Student Insert"
+            android:textColor="#F8F8F8"
+            android:textSize="20sp"
+            />
+
+        <ImageButton
+            android:id="@+id/btnSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/baseline_save_24"
+            android:background="#4CAF50" />
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/txtInputStudentName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:hint="Student Name" />
+
+    <EditText
+        android:id="@+id/txtInputStudentStudy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:cursorVisible="false"
+        android:hint="Student Study" />
+
+    <EditText
+        android:id="@+id/txtInputStudentClass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:hint="Student Class" />
+
+    <EditText
+        android:id="@+id/txtInputStudentCourse"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:hint="Student Course" />
+
+    <EditText
+        android:id="@+id/txtInputStudentGender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:cursorVisible="false"
+        android:hint="Student Gender"/>
+
+    <EditText
+        android:id="@+id/txtInputStudentBirth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:hint="Student Birth" />
+
+    <EditText
+        android:id="@+id/txtInputStudentAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:hint="Student Address"/>
+
+</LinearLayout>
