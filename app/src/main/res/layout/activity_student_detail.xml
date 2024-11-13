@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutAddStudent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#4CAF50"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btnBackFromDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/baseline_arrow_back_24"
+            android:background="#4CAF50" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="1"
+            android:text="Student Detail"
+            android:textColor="#F8F8F8"
+            android:textSize="20sp" />
+
+
+        <ImageButton
+            android:id="@+id/btnUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/baseline_save_24"
+            android:background="#4CAF50" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/txtDetailStudentName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:hint="Student Name" />
+
+
+            <EditText
+                android:id="@+id/txtDetailStudentGender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:hint="Student Gender" />
+
+            <EditText
+                android:id="@+id/txtDetailStudentBirth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:hint="Student Birth" />
+
+            <EditText
+                android:id="@+id/txtDetailStudentAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:hint="Student Address" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#7A7979" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/txtDetailStudentID"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:cursorVisible="false"
+                android:hint="Student ID" />
+
+            <EditText
+                android:id="@+id/txtDetailStudentStudy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:hint="Student Study" />
+
+            <EditText
+                android:id="@+id/txtDetailStudentClass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:hint="Student Class" />
+
+            <EditText
+                android:id="@+id/txtDetailStudentCourse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:hint="Student Course" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:background="#4CAF50">
+
+        <ImageButton
+            android:id="@+id/btnAddCertificate"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/add_certificate"
+            android:backgroundTint="@color/white"
+            app:tint="#4CAF50" />
+
+        <ImageButton
+            android:id="@+id/btnDeleteCertificate"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/baseline_credit_card_off_24"
+            android:backgroundTint="@color/white"
+            app:tint="#4CAF50" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/viewCertificate"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+</LinearLayout>
+

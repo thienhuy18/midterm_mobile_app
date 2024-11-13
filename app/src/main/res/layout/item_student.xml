@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/studentData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:orientation="vertical"
+            android:padding="6dp">
+
+            <TextView
+                android:id="@+id/txtStudentName"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Name"
+                android:textColor="#525050"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtGender"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Gender"
+                android:textColor="#525050"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/txtId"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="522H0067"
+                android:textColor="#525050"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/txtSubject"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="IT"
+                android:textColor="#525050"
+                android:textSize="16sp"/>
+
+
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/chkOption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:backgroundTint="#EFEBEB" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#525050"/>
+
+</LinearLayout>

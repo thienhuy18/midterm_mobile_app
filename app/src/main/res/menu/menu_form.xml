@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/optName"
+        android:title="Sort Name" />
+    <item
+        android:id="@+id/optID"
+        android:title="Sort ID" />
+    <item
+        android:id="@+id/optStudy"
+        android:title="Sort Study" />
+
+</menu>
