@@ -1,6 +1,7 @@
 package com.example.midterm;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -40,7 +42,10 @@ public class LoginActivity extends AppCompatActivity {
         buttonRegister = findViewById(R.id.buttonRegister);
 
         buttonLogin.setOnClickListener(v -> loginUser());
-        buttonRegister.setOnClickListener(v -> registerUser());
+        buttonRegister.setOnClickListener(v -> {
+            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+        });
+
     }
 
     private void loginUser() {
@@ -55,17 +60,35 @@ public class LoginActivity extends AppCompatActivity {
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
+
                         FirebaseUser user = auth.getCurrentUser();
                         Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
 
+
+                        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putString("originalEmail", email);  // Store the logged-in email
+                        editor.putString("originalPassword", password);  // Store the logged-in password
+                        editor.apply();
+
                         saveLoginHistory(user);
 
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+
+                        startActivity(new Intent(LoginActivity.this, MenuActivity.class));
                         finish();
+
                     } else {
-                        Log.w("LoginActivity", "signInWithEmail:failure", task.getException());
-                        Toast.makeText(LoginActivity.this, "Login failed: " + task.getException().getMessage(),
-                                Toast.LENGTH_SHORT).show();
+
+                        Exception exception = task.getException();
+                        if (exception != null && exception instanceof FirebaseAuthInvalidCredentialsException) {
+
+                            Toast.makeText(LoginActivity.this, "Incorrect username or password", Toast.LENGTH_SHORT).show();
+                        } else {
+
+                            Toast.makeText(LoginActivity.this, "Login failed: " + exception.getMessage(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        Log.w("LoginActivity", "signInWithEmail:failure", exception);
                     }
                 });
     }
@@ -73,14 +96,15 @@ public class LoginActivity extends AppCompatActivity {
     private void saveLoginHistory(FirebaseUser user) {
         if (user != null) {
             String userId = user.getUid();
-            Timestamp loginTime = Timestamp.now();  // Use Timestamp.now() to get the current timestamp
+            String email = user.getEmail();
+            Timestamp loginTime = Timestamp.now();
 
-            // Create a map to store login history data
+
             Map<String, Object> loginHistory = new HashMap<>();
             loginHistory.put("userId", userId);
-            loginHistory.put("timestamp", loginTime);  // Store as a Firestore Timestamp
+            loginHistory.put("email", email);
+            loginHistory.put("timestamp", loginTime);
 
-            // Add login history to Firestore
             db.collection("login_history")
                     .add(loginHistory)
                     .addOnSuccessListener(documentReference -> {
@@ -93,27 +117,4 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    private void registerUser() {
-        String email = inputEmail.getText().toString();
-        String password = inputPassword.getText().toString();
-
-        if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(LoginActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        FirebaseUser user = auth.getCurrentUser();
-                        Toast.makeText(LoginActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                        finish();
-                    } else {
-                        Log.w("LoginActivity", "createUserWithEmail:failure", task.getException());
-                        Toast.makeText(LoginActivity.this, "Registration failed: " + task.getException().getMessage(),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
 }

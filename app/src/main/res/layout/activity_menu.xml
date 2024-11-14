@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <Button
+            android:id="@+id/buttonUserManagement"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="User Management" />
+
+        <Button
+            android:id="@+id/buttonStudentManagement"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Student Management" />
+
+        <Button
+            android:id="@+id/buttonViewLoginHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="View Login History" />
+
+        <Button
+            android:id="@+id/buttonMyAccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="My Account" />
+
+        <Button
+            android:id="@+id/buttonLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Logout" />
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,65 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@android:color/white">
 
     <!-- Title Section -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Student Information Management"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:textStyle="bold"
+        android:textColor="#333333"
         android:layout_gravity="center_horizontal"
-        android:paddingBottom="16dp"/>
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp" />
 
-    <!-- Name Input -->
-    <EditText
-        android:id="@+id/inputName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Name" />
-
-    <!-- Age Input -->
-    <EditText
-        android:id="@+id/inputAge"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:hint="Age" />
-
-    <!-- Phone Number Input -->
-    <EditText
-        android:id="@+id/inputPhone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="phone"
-        android:hint="Phone Number" />
-
-    <!-- Status Spinner -->
-    <Spinner
-        android:id="@+id/statusSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:entries="@array/status_options" />
-
-    <!-- Add User Button -->
+    <!-- Add New User Button -->
     <Button
         android:id="@+id/buttonAddUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add User"
+        android:text="Add New User"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8dp"
+        android:textColor="@android:color/white"
+        android:background="@color/colorPrimary"
+        android:padding="12dp"
+        android:textSize="16sp"/>
 
     <!-- Divider Line -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#CCCCCC"
-        android:layout_marginVertical="16dp"/>
+        android:layout_marginVertical="16dp" />
 
     <!-- User List Title -->
     <TextView
@@ -67,64 +45,33 @@
         android:layout_height="wrap_content"
         android:text="User List"
         android:textStyle="bold"
-        android:paddingBottom="8dp" />
+        android:textColor="#333333"
+        android:paddingBottom="8dp"
+        android:textSize="18sp" />
 
     <!-- RecyclerView for displaying the list of users -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewUsers"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:layout_marginBottom="16dp"
+        android:clipToPadding="false"
+        android:paddingBottom="8dp"/>
 
     <!-- Logout Button -->
     <Button
         android:id="@+id/buttonLogout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Logout" />
-
-    <!-- Profile Image Section -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Choose Avatar"
-        android:textStyle="bold"
-        android:paddingBottom="8dp"
-        android:layout_marginTop="16dp"/>
-
-    <!-- RecyclerView for Avatar Selection -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewAvatars"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:orientation="horizontal" />
-
-    <!-- Profile ImageView -->
-    <ImageView
-        android:id="@+id/profileImageView"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:text="Logout"
+        android:textColor="@android:color/white"
         android:layout_gravity="center"
         android:layout_marginTop="16dp"
-        android:contentDescription="Profile Picture"
-        android:src="@drawable/ic_default_profile" />
+        android:background="@color/colorAccent"
+        android:padding="12dp"
+        android:textSize="16sp" />
 
-    <!-- Button to Change Profile Picture -->
-    <Button
-        android:id="@+id/buttonChangeProfilePicture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Change Profile Picture"
-        android:layout_gravity="center" />
-
-    <Button
-        android:id="@+id/buttonViewLoginHistory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="View Login History"
-        android:textColor="@color/teal_200"
-        android:layout_marginLeft="8dp" />
 
 
 </LinearLayout>

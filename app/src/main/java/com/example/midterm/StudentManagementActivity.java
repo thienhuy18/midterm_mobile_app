@@ -104,7 +104,7 @@ public class StudentManagementActivity extends AppCompatActivity {
         database = FirebaseFirestore.getInstance();
         displayStudents();
 
-        //Edit text for study modification
+
         String[] studys = {"IT", "Accountancy", "Banking", "Marketing", "Travel"};
         txtInputStudentStudy.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(StudentManagementActivity.this);
@@ -118,7 +118,7 @@ public class StudentManagementActivity extends AppCompatActivity {
             builder.show();
         });
 
-        //Edit text for gender modification
+
         String[] genders = {"Male", "Female"};
         txtInputStudentGender.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(StudentManagementActivity.this);
@@ -134,13 +134,13 @@ public class StudentManagementActivity extends AppCompatActivity {
 
         txtInputStudentBirth.setOnClickListener(v -> showDatePickerDialog());
 
-        //Switch to adding student layout
+
         btnAddStudent.setOnClickListener(v -> {
             layout1.setVisibility(View.GONE);
             layout2.setVisibility(View.VISIBLE);
         });
 
-        //Save new student and switch back to main layout
+
         btnSave.setOnClickListener(v -> {
             String id = generateUniqueId(txtInputStudentCourse.getText().toString(), txtInputStudentStudy.getText().toString());
             String name = txtInputStudentName.getText().toString().trim();
@@ -161,10 +161,10 @@ public class StudentManagementActivity extends AppCompatActivity {
                 return;
             }
 
-            addStudent(id, name, study, classroom, course, gender, birth, address); //Save to firestore
+            addStudent(id, name, study, classroom, course, gender, birth, address);
             displayStudents();
 
-            //Clear input field
+
             txtInputStudentName.setText("");
             txtInputStudentStudy.setText("");
             txtInputStudentClass.setText("");
@@ -179,7 +179,7 @@ public class StudentManagementActivity extends AppCompatActivity {
 
         });
 
-        //Press any student data and show a layout for detail, the detail is present in a editText style to change info and press the ImageButton on the top right
+
         btnUpdate.setOnClickListener(v -> {
             String id = txtDetailStudentID.getText().toString().trim();
             String name = txtDetailStudentName.getText().toString().trim();
@@ -203,7 +203,7 @@ public class StudentManagementActivity extends AppCompatActivity {
             updateStudent(id, name, study, classroom, course, gender, birth, address);
             displayStudents();
 
-            //Clear input field
+
             txtInputStudentName.setText("");
             txtInputStudentStudy.setText("");
             txtInputStudentClass.setText("");
@@ -217,12 +217,11 @@ public class StudentManagementActivity extends AppCompatActivity {
         });
 
 
-        //Delete checked student button
+
         btnDeleteStudent.setOnClickListener(v -> {
-            showMsgDelete(); //Called message before delete and proceed with delete logic when click Yes
+            showMsgDelete();
         });
 
-        //Delete checked certificate button
         btnDeleteCertificate.setOnClickListener(v -> {
             showMsgDeleteForCertification(txtDetailStudentID.getText().toString().trim());
         });
@@ -237,7 +236,6 @@ public class StudentManagementActivity extends AppCompatActivity {
             layout1.setVisibility(View.VISIBLE);
         });
 
-        //A maniplate glass icon, press it show a menu with 3 choice then call showMsg depend on choice
         btnSort.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(this, v);
             popupMenu.getMenuInflater().inflate(R.menu.menu_form, popupMenu.getMenu());
@@ -268,7 +266,7 @@ public class StudentManagementActivity extends AppCompatActivity {
         });
     }
 
-    //These following 4 are work in progress :>
+
     private void openFilePicker() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.setType("text/csv");
@@ -289,7 +287,6 @@ public class StudentManagementActivity extends AppCompatActivity {
 
     private void readFile(Uri fileUri) {
         try {
-            // Use ContentResolver to read the CSV file
             InputStream inputStream = getContentResolver().openInputStream(fileUri);
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             String line;
@@ -371,13 +368,13 @@ public class StudentManagementActivity extends AppCompatActivity {
         return idForStudy + course + randomInt;
     }
 
-    //Auto generate ID for certificate
+
     public static String generateCertificationID(String studentName) {
         int randomInt = random.nextInt(900) + 100;
         return "CER" + studentName + randomInt;
     }
 
-    //Make sure the auto id is completely uniqe
+
     public static String generateUniqueCertificationId(String studentName) {
         String id;
         do {
@@ -387,9 +384,9 @@ public class StudentManagementActivity extends AppCompatActivity {
         return id;
     }
 
-    //Add student function for Firebase
+
     private void addStudent(String id, String name, String study, String classroom, String course, String gender, String birth, String address) {
-        //Create collection:
+
         Map<String, Object> student = new HashMap<>();
         student.put("id", id);
         student.put("name", name);
@@ -400,7 +397,7 @@ public class StudentManagementActivity extends AppCompatActivity {
         student.put("birth", birth);
         student.put("address", address);
 
-        //Add to document
+
         database.collection("students")
                 .document(id) //Student ID
                 .set(student, SetOptions.merge())
@@ -408,9 +405,9 @@ public class StudentManagementActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> Log.w("Firestore", "Error adding student", e));
     }
 
-    //Add certificate function for Firebase
+
     private void addCertificate(String id, String title, String studentid, String date, String detail) {
-        //Create collection:
+
         Map<String, Object> certificate = new HashMap<>();
         certificate.put("id", id);
         certificate.put("title", title);
@@ -418,16 +415,16 @@ public class StudentManagementActivity extends AppCompatActivity {
         certificate.put("date", date);
         certificate.put("detail", detail);
 
-        //Add to document
+
         database.collection("certificates")
-                .document(id) //Certificate ID
+                .document(id)
                 .set(certificate)
                 .addOnSuccessListener(aVoid -> Log.d("Firestore", "Certificate added"))
                 .addOnFailureListener(e -> Log.w("Firestore", "Error adding certificate", e));
     }
 
     private void updateStudent(String id, String name, String study, String classroom, String course, String gender, String birth, String address) {
-        //Create collection of update student:
+
         Map<String, Object> updateStudent = new HashMap<>();
         updateStudent.put("name", name);
         updateStudent.put("study", study);
@@ -444,14 +441,14 @@ public class StudentManagementActivity extends AppCompatActivity {
     }
 
     private void updateCertificate(String id, String title, String studentid, String date, String detail) {
-        //Create collection:
+
         Map<String, Object> updateCertificate = new HashMap<>();
         updateCertificate.put("title", title);
         updateCertificate.put("studentid", studentid);
         updateCertificate.put("date", date);
         updateCertificate.put("detail", detail);
 
-        //Add to document
+
         database.collection("certificates").document(id)
                 .update(updateCertificate)
                 .addOnSuccessListener(aVoid -> Log.d("Firestore", "Certificate updated"))
@@ -498,7 +495,7 @@ public class StudentManagementActivity extends AppCompatActivity {
                 });
     }
 
-    //function show data in recycleview for student
+
     private void displayStudents() {
         database.collection("students").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -510,7 +507,7 @@ public class StudentManagementActivity extends AppCompatActivity {
                 studentAdapter = new Adapter(studentList);
                 studentView.setAdapter(studentAdapter);
 
-                //Switch to student detail layout
+
                 studentAdapter.setOnItemClickListener(new Adapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(Student student) {
@@ -524,7 +521,7 @@ public class StudentManagementActivity extends AppCompatActivity {
         });
     }
 
-    //function show data in recycleview for certificate
+
     private void displayCertificates(String studentId) {
         database.collection("certificates")
                 .whereEqualTo("studentid", studentId)

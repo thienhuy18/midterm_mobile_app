@@ -1,9 +1,11 @@
 package com.example.midterm;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +20,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -40,10 +44,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
     private FirebaseFirestore db;
     private StorageReference storageRef;
 
-    private EditText inputName, inputAge, inputPhone;
-    private Spinner statusSpinner;
-    private ImageView profileImageView;
-    private Button buttonAddUser, buttonLogout, buttonChangeProfilePicture, buttonViewLoginHistory;
+
+    private Button buttonAddUser, buttonLogout;
     private RecyclerView recyclerViewUsers;
     private UserAdapter userAdapter;
     private List<User> userList = new ArrayList<>();
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("MainActivity", "onCreate called");
         setContentView(R.layout.activity_main);
 
         auth = FirebaseAuth.getInstance();
@@ -65,31 +68,25 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
         }
 
         initializeViews();
-        loadUserProfilePicture();
 
-        buttonAddUser.setOnClickListener(v -> addUser());
+
+
+        buttonAddUser.setOnClickListener(v -> showAddUserDialog());
+
+
         buttonLogout.setOnClickListener(v -> logoutUser());
-        buttonChangeProfilePicture.setOnClickListener(v -> openImagePicker());
-        buttonViewLoginHistory.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, LoginHistoryActivity.class);
-            startActivity(intent);
-        });
+
 
         listenForUserUpdates();
 
-        listenForUserUpdates();
     }
 
     private void initializeViews() {
-        inputName = findViewById(R.id.inputName);
-        inputAge = findViewById(R.id.inputAge);
-        inputPhone = findViewById(R.id.inputPhone);
-        statusSpinner = findViewById(R.id.statusSpinner);
-        profileImageView = findViewById(R.id.profileImageView);
+
+
+
         buttonAddUser = findViewById(R.id.buttonAddUser);
         buttonLogout = findViewById(R.id.buttonLogout);
-        buttonChangeProfilePicture = findViewById(R.id.buttonChangeProfilePicture);
-        buttonViewLoginHistory = findViewById(R.id.buttonViewLoginHistory);
 
         recyclerViewUsers = findViewById(R.id.recyclerViewUsers);
 
@@ -98,45 +95,128 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
         recyclerViewUsers.setAdapter(userAdapter);
     }
 
-    private void addUser() {
-        String name = inputName.getText().toString().trim();
-        String ageText = inputAge.getText().toString().trim();
-        String phone = inputPhone.getText().toString().trim();
-        String status = statusSpinner.getSelectedItem().toString();
 
-        if (name.isEmpty() || ageText.isEmpty() || phone.isEmpty()) {
-            Toast.makeText(MainActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+
+
+    private void showAddUserDialog() {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View addUserView = inflater.inflate(R.layout.dialog_add_user, null);
+
+        EditText addName = addUserView.findViewById(R.id.addName);
+        EditText addAge = addUserView.findViewById(R.id.addAge);
+        EditText addPhone = addUserView.findViewById(R.id.addPhone);
+        Spinner addStatusSpinner = addUserView.findViewById(R.id.addStatusSpinner);
+        EditText addEmail = addUserView.findViewById(R.id.addEmail);
+        EditText addPassword = addUserView.findViewById(R.id.addPassword);
+        Button btnAddUser = addUserView.findViewById(R.id.btnAddUser);
+
+        AlertDialog addUserDialog = new AlertDialog.Builder(this)
+                .setView(addUserView)
+                .setTitle("Add New User")
+                .create();
+
+        btnAddUser.setOnClickListener(view -> {
+            String name = addName.getText().toString().trim();
+            String ageText = addAge.getText().toString().trim();
+            String phone = addPhone.getText().toString().trim();
+            String status = addStatusSpinner.getSelectedItem().toString();
+            String email = addEmail.getText().toString().trim();
+            String password = addPassword.getText().toString().trim();
+
+            if (name.isEmpty() || ageText.isEmpty() || phone.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Please fill out all fields", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            int age = Integer.parseInt(ageText);
+            User newUser = new User(name, age, phone, status);
+
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (currentUser == null) {
+                Toast.makeText(this, "No user is currently logged in", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("originalUserId", currentUser.getUid());
+            editor.apply();
+
+            addUserToList(email, password, newUser);
+
+            addUserDialog.dismiss();
+        });
+
+        addUserDialog.show();
+    }
+
+
+
+    private void addUserToList(String email, String password, User user) {
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser == null) {
+            Toast.makeText(this, "No user is currently logged in", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        try {
-            int age = Integer.parseInt(ageText);
-            Map<String, Object> user = new HashMap<>();
-            user.put("name", name);
-            user.put("age", age);
-            user.put("phone", phone);
-            user.put("status", status);
+        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        String originalEmail = prefs.getString("originalEmail", null);
+        String originalPassword = prefs.getString("originalPassword", null);
 
-            db.collection("users").add(user)
-                    .addOnSuccessListener(documentReference -> {
-                        Log.d("Firestore", "User added with ID: " + documentReference.getId());
-                        Toast.makeText(MainActivity.this, "User added successfully", Toast.LENGTH_SHORT).show();
-                        clearInputFields();
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.w("Firestore", "Error adding user: " + e.getMessage(), e);
-                        Toast.makeText(MainActivity.this, "Failed to add user: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    });
-        } catch (NumberFormatException e) {
-            Toast.makeText(MainActivity.this, "Age must be a number", Toast.LENGTH_SHORT).show();
+        if (originalEmail == null || originalPassword == null) {
+            Toast.makeText(this, "Original user credentials are missing", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+
+        auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser firebaseUser = auth.getCurrentUser();
+                        if (firebaseUser != null) {
+                            String userId = firebaseUser.getUid();
+
+                            Map<String, Object> userMap = new HashMap<>();
+                            userMap.put("name", user.getName());
+                            userMap.put("age", user.getAge());
+                            userMap.put("phone", user.getPhone());
+                            userMap.put("status", user.getStatus());
+
+                            db.collection("users").document(userId)
+                                    .set(userMap)
+                                    .addOnSuccessListener(aVoid -> {
+                                        Toast.makeText(MainActivity.this, "User added successfully", Toast.LENGTH_SHORT).show();
+
+
+                                        auth.signOut();
+                                        auth.signInWithEmailAndPassword(originalEmail, originalPassword)
+                                                .addOnCompleteListener(reAuthTask -> {
+                                                    if (reAuthTask.isSuccessful()) {
+                                                        Toast.makeText(MainActivity.this, "Re-authenticated as original user", Toast.LENGTH_SHORT).show();
+
+                                                    } else {
+                                                        Toast.makeText(MainActivity.this, "Failed to re-authenticate", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e("MainActivity", "Failed to add user to Firestore", e);
+                                        Toast.makeText(MainActivity.this, "Failed to add user", Toast.LENGTH_SHORT).show();
+                                    });
+                        }
+                    } else {
+                        Toast.makeText(MainActivity.this, "Failed to create user: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
-    private void clearInputFields() {
-        inputName.setText("");
-        inputAge.setText("");
-        inputPhone.setText("");
-    }
+
+
+
+
+
+
+
 
     private void logoutUser() {
         auth.signOut();
@@ -144,72 +224,12 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
         finish();
     }
 
-    private void openImagePicker() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-    }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            Uri imageUri = data.getData();
-            uploadProfilePicture(imageUri);
-        }
-    }
 
-    private void uploadProfilePicture(Uri imageUri) {
-        FirebaseUser currentUser = auth.getCurrentUser();
-        if (currentUser == null) return;
 
-        String userId = currentUser.getUid();
-        StorageReference fileRef = storageRef.child(userId + ".jpg");
 
-        fileRef.putFile(imageUri)
-                .addOnSuccessListener(taskSnapshot -> fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                    saveProfilePictureUri(uri.toString());
-                }))
-                .addOnFailureListener(e -> {
-                    Log.e("MainActivity", "Upload failed", e);
-                    Toast.makeText(MainActivity.this, "Failed to upload image", Toast.LENGTH_SHORT).show();
-                });
-    }
 
-    private void saveProfilePictureUri(String downloadUrl) {
-        FirebaseUser currentUser = auth.getCurrentUser();
-        if (currentUser == null) return;
 
-        String userId = currentUser.getUid();
-
-        db.collection("users").document(userId)
-                .update("profilePictureUrl", downloadUrl)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(MainActivity.this, "Profile picture updated", Toast.LENGTH_SHORT).show();
-                    Picasso.get().load(downloadUrl).into(profileImageView);
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("MainActivity", "Error updating profile picture URL", e);
-                    Toast.makeText(MainActivity.this, "Failed to update profile picture URL", Toast.LENGTH_SHORT).show();
-                });
-    }
-
-    private void loadUserProfilePicture() {
-        FirebaseUser currentUser = auth.getCurrentUser();
-        if (currentUser == null) return;
-
-        String userId = currentUser.getUid();
-
-        db.collection("users").document(userId).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists() && documentSnapshot.contains("profilePictureUrl")) {
-                        String profilePictureUrl = documentSnapshot.getString("profilePictureUrl");
-                        Picasso.get().load(profilePictureUrl).into(profileImageView);
-                    }
-                })
-                .addOnFailureListener(e -> Log.e("MainActivity", "Error loading profile picture", e));
-    }
 
     private void listenForUserUpdates() {
         userListener = db.collection("users").addSnapshotListener((snapshots, e) -> {
@@ -221,14 +241,29 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
             if (snapshots != null) {
                 userList.clear();
                 for (QueryDocumentSnapshot doc : snapshots) {
+
                     String documentId = doc.getId();
+                    Log.d("MainActivity", "Document data: " + doc.getData());
+
                     String name = doc.getString("name");
-                    long age = doc.getLong("age");
+                    long age;
+                    try {
+                        age = doc.getLong("age");
+                    } catch (Exception ex) {
+                        Log.w("MainActivity", "Field 'age' is not a number", ex);
+                        age = 0;
+                    }
+
                     String phone = doc.getString("phone");
                     String status = doc.getString("status");
+                    String email = doc.getString("email");
+                    String password = doc.getString("password");
 
-                    User user = new User(name, (int) age, phone, status);
+                    Log.d("MainActivity", "Fetched email: " + email);
+
+                    User user = new User(name, (int) age, phone, status,email, password);
                     user.setDocumentId(documentId);
+
                     userList.add(user);
                 }
                 userAdapter.notifyDataSetChanged();
@@ -238,18 +273,51 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
 
     @Override
     public void onUserDeleteClick(User user) {
+        Log.d("UserAdapter", "Delete button clicked for: " + user.getName());
         deleteUser(user);
     }
 
+
+
+
+
+
+
+
     private void deleteUser(User user) {
+        Log.d("MainActivity", "Delete user clicked: " + user.getName());
+
+
+        deleteUserFromFirestore(user);
+        deleteFirebaseAuthUser(user);
+    }
+
+    private void deleteUserFromFirestore(User user) {
         db.collection("users").document(user.getDocumentId())
                 .delete()
-                .addOnSuccessListener(aVoid -> Toast.makeText(MainActivity.this, "User deleted successfully", Toast.LENGTH_SHORT).show())
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(MainActivity.this, "User data deleted from Firestore", Toast.LENGTH_SHORT).show();
+                })
                 .addOnFailureListener(e -> {
-                    Log.w("MainActivity", "Error deleting user", e);
-                    Toast.makeText(MainActivity.this, "Failed to delete user", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Failed to delete user data from Firestore", Toast.LENGTH_SHORT).show();
                 });
     }
+
+    private void deleteFirebaseAuthUser(User user) {
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser != null && currentUser.getUid().equals(user.getDocumentId())) {
+            currentUser.delete()
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(MainActivity.this, "User deleted from Firebase Authentication", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(MainActivity.this, "Failed to delete user from Firebase Authentication", Toast.LENGTH_SHORT).show();
+                    });
+        } else {
+            Toast.makeText(MainActivity.this, "Cannot delete another user from Firebase Authentication", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     @Override
     protected void onDestroy() {
@@ -297,6 +365,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
                         updatedUser.put("age", age);
                         updatedUser.put("phone", phone);
                         updatedUser.put("status", status);
+
+
 
                         db.collection("users").document(user.getDocumentId())
                                 .update(updatedUser)

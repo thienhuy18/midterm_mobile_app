@@ -30,13 +30,13 @@ public class LoginHistoryAdapter extends RecyclerView.Adapter<LoginHistoryAdapte
     public void onBindViewHolder(LoginHistoryViewHolder holder, int position) {
         LoginHistory loginHistory = loginHistoryList.get(position);
 
-        // Format the timestamp
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         String formattedTimestamp = sdf.format(loginHistory.getTimestamp().toDate());
 
-        // Set the userId and formatted timestamp to the TextViews
-        holder.userIdTextView.setText(loginHistory.getUserId());
-        holder.timestampTextView.setText(formattedTimestamp);  // Set the formatted timestamp
+
+
+        holder.timestampTextView.setText(formattedTimestamp);
     }
 
     @Override
@@ -50,8 +50,8 @@ public class LoginHistoryAdapter extends RecyclerView.Adapter<LoginHistoryAdapte
 
         public LoginHistoryViewHolder(View itemView) {
             super(itemView);
-            userIdTextView = itemView.findViewById(R.id.userIdTextView);  // Your TextView for userId
-            timestampTextView = itemView.findViewById(R.id.timestampTextView);  // Your TextView for timestamp
+
+            timestampTextView = itemView.findViewById(R.id.timestampTextView);
         }
     }
 }

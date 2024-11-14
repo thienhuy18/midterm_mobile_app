@@ -7,6 +7,22 @@ public class LoginHistory {
     private String userId;
     private Timestamp timestamp;
 
+    private String email;
+
+    public LoginHistory(String userId, String email, Timestamp timestamp) {
+        this.userId = userId;
+        this.email = email;
+        this.timestamp = timestamp;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public LoginHistory(String userId, Timestamp timestamp) {
         this.userId = userId;
         this.timestamp = timestamp;

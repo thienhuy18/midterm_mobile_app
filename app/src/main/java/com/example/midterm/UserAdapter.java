@@ -44,7 +44,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             }
         });
 
-        holder.editButton.setOnClickListener(v -> {  // Set up edit button listener
+        holder.editButton.setOnClickListener(v -> {
             if (onUserEditClickListener != null) {
                 onUserEditClickListener.onUserEditClick(user);
             }
@@ -58,7 +58,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
     static class UserViewHolder extends RecyclerView.ViewHolder {
         TextView name, age, phone, status;
-        Button deleteButton, editButton;  // Add edit button
+        Button deleteButton, editButton;
 
         public UserViewHolder(View itemView) {
             super(itemView);
@@ -67,7 +67,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             phone = itemView.findViewById(R.id.userPhone);
             status = itemView.findViewById(R.id.userStatus);
             deleteButton = itemView.findViewById(R.id.deleteButton);
-            editButton = itemView.findViewById(R.id.editButton);  // Initialize edit button
+            editButton = itemView.findViewById(R.id.editButton);
         }
     }
 
@@ -75,7 +75,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         void onUserDeleteClick(User user);
     }
 
-    public interface OnUserEditClickListener {  // New interface for editing
+    public interface OnUserEditClickListener {
         void onUserEditClick(User user);
     }
 }

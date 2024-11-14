@@ -4,6 +4,7 @@ package com.example.midterm;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,6 +31,8 @@ public class LoginHistoryActivity extends AppCompatActivity {
     private LoginHistoryAdapter loginHistoryAdapter;
     private List<LoginHistory> loginHistoryList = new ArrayList<>();
     private String userId;
+    private String userEmail;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +45,17 @@ public class LoginHistoryActivity extends AppCompatActivity {
 
         loginHistoryAdapter = new LoginHistoryAdapter(loginHistoryList);
         recyclerViewLoginHistory.setAdapter(loginHistoryAdapter);
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            userEmail = currentUser.getEmail();
+        }
 
-        // Get userId from Intent
+        TextView emailMessageTextView = findViewById(R.id.emailHeaderTextView);
+        if (userEmail != null) {
+            emailMessageTextView.setText("Login history of " + userEmail);
+        }
+
+
         userId = getIntent().getStringExtra("userId");
 
         loadLoginHistory();
@@ -52,7 +64,7 @@ public class LoginHistoryActivity extends AppCompatActivity {
     private void loadLoginHistory() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
-            String currentUserId = currentUser.getUid();  // Get the current user's ID
+            String currentUserId = currentUser.getUid();
             Log.d("LoginHistory", "Current user ID: " + currentUserId);
 
             db.collection("login_history")
@@ -67,23 +79,11 @@ public class LoginHistoryActivity extends AppCompatActivity {
                                 Log.d("LoginHistory", "Document data: " + documentSnapshot.getData());
 
                                 String documentUserId = documentSnapshot.getString("userId");
-
-                                // Get the timestamp field from Firestore
-                                Object timestampObj = documentSnapshot.get("timestamp");
-                                Timestamp timestamp = null;
-
-                                // Check the type of the timestamp field and handle accordingly
-                                if (timestampObj instanceof Timestamp) {
-                                    // If it's already a Timestamp, use it directly
-                                    timestamp = (Timestamp) timestampObj;
-                                } else if (timestampObj instanceof Long) {
-                                    // If it's stored as a Long (milliseconds), convert it to a Timestamp
-                                    timestamp = new Timestamp(new Date((Long) timestampObj));
-                                }
+                                String email = documentSnapshot.getString("email");
+                                Timestamp timestamp = documentSnapshot.getTimestamp("timestamp");
 
                                 if (timestamp != null) {
-                                    // Add LoginHistory with the Timestamp object
-                                    LoginHistory loginHistory = new LoginHistory(documentUserId, timestamp);
+                                    LoginHistory loginHistory = new LoginHistory(documentUserId, email, timestamp);
                                     loginHistoryList.add(loginHistory);
                                 } else {
                                     Log.e("LoginHistory", "No valid timestamp available in document.");
@@ -102,5 +102,6 @@ public class LoginHistoryActivity extends AppCompatActivity {
             Log.d("LoginHistory", "Current user is null.");
         }
     }
+
 
 }

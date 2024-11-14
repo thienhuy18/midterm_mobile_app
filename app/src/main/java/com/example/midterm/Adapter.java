@@ -21,7 +21,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>  {
         this.students = students;
     }
 
-    // Custom listener interface for item click
+
     public interface OnItemClickListener {
         void onItemClick(Student student);
     }
