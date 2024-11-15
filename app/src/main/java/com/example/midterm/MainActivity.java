@@ -43,6 +43,12 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
     private FirebaseAuth auth;
     private FirebaseFirestore db;
     private StorageReference storageRef;
+    private ImageView profileImageView;
+    private String[] avatarNames = {"avatar1", "avatar2", "avatar3", "avatar4","avatar5","avatar6","avatar7","avatar8","avatar9","avatar10"};
+    private int[] avatarResIds = {R.drawable.avatar1, R.drawable.avatar2, R.drawable.avatar3, R.drawable.avatar4, R.drawable.avatar5, R.drawable.avatar6, R.drawable.avatar7, R.drawable.avatar8, R.drawable.avatar9, R.drawable.avatar10};
+
+
+
 
 
     private Button buttonAddUser, buttonLogout;
@@ -79,6 +85,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
 
         listenForUserUpdates();
 
+
+
+        loadUserAvatar();
+        listenForAvatarChanges();
+
     }
 
     private void initializeViews() {
@@ -93,6 +104,10 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
         recyclerViewUsers.setLayoutManager(new LinearLayoutManager(this));
         userAdapter = new UserAdapter(userList, this, this);
         recyclerViewUsers.setAdapter(userAdapter);
+        profileImageView = findViewById(R.id.profileImageView);
+
+
+
     }
 
 
@@ -360,4 +375,63 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
                 .setNegativeButton("Cancel", null)
                 .show();
     }
+    private void loadUserAvatar() {
+        String userId = auth.getCurrentUser().getUid(); // Get the current user's ID
+
+        // Fetch the user's avatar from Firestore (assuming 'users' is your collection)
+        db.collection("users").document(userId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // Retrieve the selected avatar name (e.g., "avatar10")
+                        String selectedAvatar = documentSnapshot.getString("selectedAvatar");
+
+                        if (selectedAvatar != null && !selectedAvatar.isEmpty()) {
+                            // Dynamically load the avatar image based on the selected avatar name
+                            int resID = getResources().getIdentifier(selectedAvatar, "drawable", getPackageName());
+
+                            if (resID != 0) { // Check if the resource ID is valid
+                                profileImageView.setImageResource(resID);
+                            } else {
+                                // If the resource is not found, set the default avatar
+                                profileImageView.setImageResource(R.drawable.ic_default_profile);
+                            }
+                        } else {
+                            // If no avatar is selected, use the default avatar
+                            profileImageView.setImageResource(R.drawable.ic_default_profile);
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Handle failure (e.g., network issue, missing data)
+                    profileImageView.setImageResource(R.drawable.ic_default_profile);
+                });
+    }
+
+    private void listenForAvatarChanges() {
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser == null) return;
+
+        String userId = currentUser.getUid();
+
+        // Listen for changes in the user's avatar
+        db.collection("users").document(userId)
+                .addSnapshotListener((documentSnapshot, e) -> {
+                    if (e != null) {
+                        Log.w("MenuActivity", "Listen failed.", e);
+                        return;
+                    }
+
+                    if (documentSnapshot != null && documentSnapshot.exists()) {
+                        String selectedAvatar = documentSnapshot.getString("selectedAvatar");
+                        if (selectedAvatar != null) {
+                            // Get the corresponding resource ID for the avatar
+                            int avatarIndex = java.util.Arrays.asList(avatarNames).indexOf(selectedAvatar);
+                            if (avatarIndex != -1) {
+                                profileImageView.setImageResource(avatarResIds[avatarIndex]); // Update the image
+                            }
+                        }
+                    }
+                });
+    }
 }
+

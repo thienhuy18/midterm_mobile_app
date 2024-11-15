@@ -5,52 +5,49 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
+public class AvatarAdapter extends RecyclerView.Adapter<AvatarAdapter.AvatarViewHolder> {
 
-public class AvatarAdapter extends RecyclerView.Adapter<AvatarAdapter.ViewHolder> {
+    private final int[] avatarResIds;
+    private final OnAvatarClickListener listener;
 
-    private final List<Integer> avatarDrawableIds;
-    private final Context context;
-    private final AvatarSelectListener avatarSelectListener;
+    public interface OnAvatarClickListener {
+        void onAvatarClick(int avatarResId, String avatarName);
+    }
 
-    public AvatarAdapter(List<Integer> avatarDrawableIds, Context context, AvatarSelectListener avatarSelectListener) {
-        this.avatarDrawableIds = avatarDrawableIds;
-        this.context = context;
-        this.avatarSelectListener = avatarSelectListener;
+    public AvatarAdapter(int[] avatarResIds, OnAvatarClickListener listener) {
+        this.avatarResIds = avatarResIds;
+        this.listener = listener;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_avatar, parent, false);
-        return new ViewHolder(view);
+    public AvatarViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_avatar, parent, false);
+        return new AvatarViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        int avatarDrawableId = avatarDrawableIds.get(position);
-        holder.avatarImageView.setImageResource(avatarDrawableId);
-        holder.itemView.setOnClickListener(v -> avatarSelectListener.onAvatarSelected(avatarDrawableId));
+    public void onBindViewHolder(@NonNull AvatarViewHolder holder, int position) {
+        int avatarResId = avatarResIds[position];
+        holder.avatarImageView.setImageResource(avatarResId);
+        holder.itemView.setOnClickListener(v -> listener.onAvatarClick(avatarResId, "avatar" + (position + 1)));
     }
 
     @Override
     public int getItemCount() {
-        return avatarDrawableIds.size();
+        return avatarResIds.length;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class AvatarViewHolder extends RecyclerView.ViewHolder {
         ImageView avatarImageView;
 
-        public ViewHolder(View itemView) {
+        public AvatarViewHolder(@NonNull View itemView) {
             super(itemView);
             avatarImageView = itemView.findViewById(R.id.avatarImageView);
         }
-    }
-
-    public interface AvatarSelectListener {
-        void onAvatarSelected(int avatarDrawableId);
     }
 }

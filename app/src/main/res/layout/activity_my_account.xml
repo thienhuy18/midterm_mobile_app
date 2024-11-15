@@ -6,7 +6,7 @@
     android:gravity="center_horizontal"
     android:padding="16dp">
 
-    <!-- Profile Picture -->
+
     <ImageView
         android:id="@+id/profileImageView"
         android:layout_width="120dp"
@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:text="Name:"
                 android:textStyle="bold"
-                android:textSize="18sp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/nameTextView"
@@ -55,7 +55,7 @@
                 android:layout_weight="1"
                 android:paddingStart="8dp"
                 android:text="N/A"
-                android:textSize="18sp" />
+                android:textSize="20sp" />
         </LinearLayout>
 
         <!-- Age Row -->
@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:text="Age:"
                 android:textStyle="bold"
-                android:textSize="18sp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/ageTextView"
@@ -80,7 +80,7 @@
                 android:layout_weight="1"
                 android:paddingStart="8dp"
                 android:text="N/A"
-                android:textSize="18sp" />
+                android:textSize="20sp" />
         </LinearLayout>
 
         <!-- Phone Row -->
@@ -96,7 +96,7 @@
                 android:layout_height="wrap_content"
                 android:text="Phone:"
                 android:textStyle="bold"
-                android:textSize="18sp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/phoneTextView"
@@ -105,7 +105,7 @@
                 android:layout_weight="1"
                 android:paddingStart="8dp"
                 android:text="N/A"
-                android:textSize="18sp" />
+                android:textSize="20sp" />
         </LinearLayout>
 
         <!-- Status Row -->
@@ -121,7 +121,7 @@
                 android:layout_height="wrap_content"
                 android:text="Status:"
                 android:textStyle="bold"
-                android:textSize="18sp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/statusTextView"
@@ -130,9 +130,11 @@
                 android:layout_weight="1"
                 android:paddingStart="8dp"
                 android:text="N/A"
-                android:textSize="18sp" />
+                android:textSize="20sp" />
         </LinearLayout>
     </LinearLayout>
+
+    <!-- Edit Info Button -->
     <Button
         android:id="@+id/buttonEditInfo"
         android:layout_width="wrap_content"

@@ -17,18 +17,21 @@
         android:id="@+id/userAge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         android:paddingBottom="2dp" />
 
     <TextView
         android:id="@+id/userPhone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         android:paddingBottom="2dp" />
 
     <TextView
         android:id="@+id/userStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+     
         android:paddingBottom="8dp" />
 
     <LinearLayout
