@@ -28,4 +28,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <!-- Profile Image in the Bottom Right -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/profileImageView"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_default_profile"
+        android:scaleType="centerCrop"
+        android:contentDescription="Profile Image"
+        android:backgroundTint="@android:color/transparent"
+        app:shapeAppearanceOverlay="@style/CircularShape"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
