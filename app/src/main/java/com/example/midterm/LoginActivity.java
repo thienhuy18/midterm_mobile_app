@@ -28,6 +28,12 @@ public class LoginActivity extends AppCompatActivity {
     private Button buttonLogin, buttonRegister;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        Toast.makeText(LoginActivity.this, "Welcome to the app", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
@@ -39,12 +45,12 @@ public class LoginActivity extends AppCompatActivity {
         inputEmail = findViewById(R.id.inputEmail);
         inputPassword = findViewById(R.id.inputPassword);
         buttonLogin = findViewById(R.id.buttonLogin);
-        buttonRegister = findViewById(R.id.buttonRegister);
+        //buttonRegister = findViewById(R.id.buttonRegister);
 
         buttonLogin.setOnClickListener(v -> loginUser());
-        buttonRegister.setOnClickListener(v -> {
-            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-        });
+        //  buttonRegister.setOnClickListener(v -> {
+        //      startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+        //  });
 
     }
 

@@ -9,6 +9,7 @@ public class User {
     private String status;
     private String email;
     private String password;
+    private String role;
 
     public String getPassword() {
         return password;
@@ -27,22 +28,22 @@ public class User {
     }
 
 
-    public User(String name, int age, String phone, String status, String email, String password) {
-
+    public User(String name, int age, String phone, String status, String email, String password, String role) {
         this.name = name;
         this.age = age;
         this.phone = phone;
         this.status = status;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
-    public User(String name, int age, String phone, String status) {
+    public User(String name, int age, String phone, String status, String role) {
         this.name = name;
         this.age = age;
         this.phone = phone;
         this.status = status;
-
+        this.role = role;
     }
 
     public String getDocumentId() {
@@ -67,5 +68,13 @@ public class User {
 
     public String getStatus() {
         return status;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

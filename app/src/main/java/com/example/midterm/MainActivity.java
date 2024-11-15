@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
         EditText addAge = addUserView.findViewById(R.id.addAge);
         EditText addPhone = addUserView.findViewById(R.id.addPhone);
         Spinner addStatusSpinner = addUserView.findViewById(R.id.addStatusSpinner);
+        Spinner addRoleSpinner = addUserView.findViewById(R.id.addRoleSpinner);
         EditText addEmail = addUserView.findViewById(R.id.addEmail);
         EditText addPassword = addUserView.findViewById(R.id.addPassword);
         Button btnAddUser = addUserView.findViewById(R.id.btnAddUser);
@@ -120,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
             String ageText = addAge.getText().toString().trim();
             String phone = addPhone.getText().toString().trim();
             String status = addStatusSpinner.getSelectedItem().toString();
+            String role = addRoleSpinner.getSelectedItem().toString();
             String email = addEmail.getText().toString().trim();
             String password = addPassword.getText().toString().trim();
 
@@ -129,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
             }
 
             int age = Integer.parseInt(ageText);
-            User newUser = new User(name, age, phone, status);
+            User newUser = new User(name, age, phone, status, role);
 
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
             if (currentUser == null) {
@@ -168,7 +170,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
             return;
         }
 
-
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -181,12 +182,12 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
                             userMap.put("age", user.getAge());
                             userMap.put("phone", user.getPhone());
                             userMap.put("status", user.getStatus());
+                            userMap.put("role", user.getRole());
 
                             db.collection("users").document(userId)
                                     .set(userMap)
                                     .addOnSuccessListener(aVoid -> {
                                         Toast.makeText(MainActivity.this, "User added successfully", Toast.LENGTH_SHORT).show();
-
 
                                         auth.signOut();
                                         auth.signInWithEmailAndPassword(originalEmail, originalPassword)
@@ -210,26 +211,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
                 });
     }
 
-
-
-
-
-
-
-
-
     private void logoutUser() {
         auth.signOut();
         startActivity(new Intent(MainActivity.this, LoginActivity.class));
         finish();
     }
-
-
-
-
-
-
-
 
     private void listenForUserUpdates() {
         userListener = db.collection("users").addSnapshotListener((snapshots, e) -> {
@@ -258,10 +244,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
                     String status = doc.getString("status");
                     String email = doc.getString("email");
                     String password = doc.getString("password");
+                    String role = doc.getString("role");
 
                     Log.d("MainActivity", "Fetched email: " + email);
 
-                    User user = new User(name, (int) age, phone, status,email, password);
+                    User user = new User(name, (int) age, phone, status,email, password, role);
                     user.setDocumentId(documentId);
 
                     userList.add(user);
@@ -276,13 +263,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
         Log.d("UserAdapter", "Delete button clicked for: " + user.getName());
         deleteUser(user);
     }
-
-
-
-
-
-
-
 
     private void deleteUser(User user) {
         Log.d("MainActivity", "Delete user clicked: " + user.getName());
@@ -318,7 +298,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
         }
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -338,6 +317,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
         EditText editAge = dialogView.findViewById(R.id.editAge);
         EditText editPhone = dialogView.findViewById(R.id.editPhone);
         Spinner editStatusSpinner = dialogView.findViewById(R.id.editStatusSpinner);
+        Spinner editRoleSpinner = dialogView.findViewById(R.id.editRoleSpinner);
 
         editName.setText(user.getName());
         editAge.setText(String.valueOf(user.getAge()));
@@ -351,6 +331,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
                     String ageText = editAge.getText().toString().trim();
                     String phone = editPhone.getText().toString().trim();
                     String status = editStatusSpinner.getSelectedItem().toString();
+                    String role = editRoleSpinner.getSelectedItem().toString();
 
                     if (name.isEmpty() || ageText.isEmpty() || phone.isEmpty()) {
                         Toast.makeText(MainActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
@@ -365,8 +346,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
                         updatedUser.put("age", age);
                         updatedUser.put("phone", phone);
                         updatedUser.put("status", status);
-
-
+                        updatedUser.put("role", role);
 
                         db.collection("users").document(user.getDocumentId())
                                 .update(updatedUser)
