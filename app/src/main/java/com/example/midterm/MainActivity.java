@@ -106,6 +106,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
         recyclerViewUsers.setAdapter(userAdapter);
         profileImageView = findViewById(R.id.profileImageView);
 
+
+
     }
 
 
