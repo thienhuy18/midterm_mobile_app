@@ -48,9 +48,9 @@ public class LoginActivity extends AppCompatActivity {
         //buttonRegister = findViewById(R.id.buttonRegister);
 
         buttonLogin.setOnClickListener(v -> loginUser());
-       //   buttonRegister.setOnClickListener(v -> {
-         //     startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-         //});
+        //   buttonRegister.setOnClickListener(v -> {
+        //     startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+        //});
 
     }
 
@@ -69,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         FirebaseUser user = auth.getCurrentUser();
                         if (user != null) {
+                            checkUserDeleted(user.getUid());
                             checkUserStatus(user);
                         }
                         Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
@@ -79,6 +80,7 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putString("originalEmail", email);  // Store the logged-in email
                         editor.putString("originalPassword", password);  // Store the logged-in password
                         editor.apply();
+
 
                         saveLoginHistory(user);
 
@@ -165,6 +167,31 @@ public class LoginActivity extends AppCompatActivity {
                     auth.signOut(); // Sign the user out
                 });
     }
+
+    private void checkUserDeleted(String userId) {
+        // Check if the user document exists in Firestore
+        db.collection("users").document(userId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (!documentSnapshot.exists()) {
+
+                        Toast.makeText(LoginActivity.this, "Your account has been deleted. Logging out.", Toast.LENGTH_SHORT).show();
+                        FirebaseAuth.getInstance().signOut();
+                        startActivity(new Intent(LoginActivity.this, LoginActivity.class)); // Navigate back to login screen
+                        finish();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // If there’s an error, log the user out
+                    Toast.makeText(LoginActivity.this, "Failed to verify account status: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    FirebaseAuth.getInstance().signOut();
+                    startActivity(new Intent(LoginActivity.this, LoginActivity.class)); // Navigate back to login screen
+                    finish();
+                });
+
+
+    }
+
+
 
 
 

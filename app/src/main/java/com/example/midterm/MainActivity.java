@@ -284,7 +284,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
 
 
         deleteUserFromFirestore(user);
-        deleteFirebaseAuthUser(user);
+
     }
 
     private void deleteUserFromFirestore(User user) {
@@ -298,20 +298,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
                 });
     }
 
-    private void deleteFirebaseAuthUser(User user) {
-        FirebaseUser currentUser = auth.getCurrentUser();
-        if (currentUser != null ) {
-            currentUser.delete()
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(MainActivity.this, "User deleted from Firebase Authentication", Toast.LENGTH_SHORT).show();
-                    })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(MainActivity.this, "Failed to delete user from Firebase Authentication", Toast.LENGTH_SHORT).show();
-                    });
-        } else {
-            Toast.makeText(MainActivity.this, "Cannot delete another user from Firebase Authentication", Toast.LENGTH_SHORT).show();
-        }
-    }
+
 
     @Override
     protected void onDestroy() {
