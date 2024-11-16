@@ -16,7 +16,7 @@ public class EditInfoActivity extends AppCompatActivity {
     private ArrayAdapter<CharSequence> adapter;
 
 
-    private Spinner spinnerStatus;
+
     private EditText editName, editAge, editPhone;
     private Button saveButton;
     private FirebaseAuth auth;
@@ -31,7 +31,7 @@ public class EditInfoActivity extends AppCompatActivity {
         editName = findViewById(R.id.editName);
         editAge = findViewById(R.id.editAge);
         editPhone = findViewById(R.id.editPhone);
-        spinnerStatus = findViewById(R.id.spinnerStatus);
+
 
         saveButton = findViewById(R.id.saveButton);
 
@@ -41,7 +41,7 @@ public class EditInfoActivity extends AppCompatActivity {
         adapter = ArrayAdapter.createFromResource(this,
                 R.array.status_options, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerStatus.setAdapter(adapter);
+
 
 
         loadUserInfo();
@@ -60,17 +60,14 @@ public class EditInfoActivity extends AppCompatActivity {
                         String name = documentSnapshot.getString("name");
                         Long age = documentSnapshot.getLong("age");
                         String phone = documentSnapshot.getString("phone");
-                        String status = documentSnapshot.getString("status");
+
 
                         editName.setText(name != null ? name : "");
                         editAge.setText(age != null ? String.valueOf(age) : "");
                         editPhone.setText(phone != null ? phone : "");
 
 
-                        if (status != null) {
-                            int spinnerPosition = adapter.getPosition(status);
-                            spinnerStatus.setSelection(spinnerPosition);
-                        }
+
                     }
                 })
                 .addOnFailureListener(e -> Toast.makeText(EditInfoActivity.this, "Failed to load user information", Toast.LENGTH_SHORT).show());
@@ -81,8 +78,8 @@ public class EditInfoActivity extends AppCompatActivity {
         String name = editName.getText().toString().trim();
         String ageString = editAge.getText().toString().trim();
         String phone = editPhone.getText().toString().trim();
-        String status = spinnerStatus.getSelectedItem().toString().trim();
-        if (name.isEmpty() || ageString.isEmpty() || phone.isEmpty() || status.isEmpty()) {
+
+        if (name.isEmpty() || ageString.isEmpty() || phone.isEmpty()  ) {
             Toast.makeText(EditInfoActivity.this, "All fields are required", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -95,7 +92,7 @@ public class EditInfoActivity extends AppCompatActivity {
 
 
             db.collection("users").document(userId)
-                    .update("name", name, "age", age, "phone", phone, "status", status)
+                    .update("name", name, "age", age, "phone", phone)
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(EditInfoActivity.this, "Information updated successfully", Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK);

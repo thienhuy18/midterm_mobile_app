@@ -21,7 +21,7 @@ public class MenuActivity extends AppCompatActivity {
 
     private Button buttonUserManagement, buttonViewLoginHistory, buttonLogout, buttonStudentManagement,buttonMyAccount;
     private FirebaseAuth auth;
-    private ImageView profileImageView; // Declare ImageView for profile picture
+    private ImageView profileImageView;
     private FirebaseFirestore db;
 
     private String[] avatarNames = {"avatar1", "avatar2", "avatar3", "avatar4","avatar5","avatar6","avatar7","avatar8","avatar9","avatar10"};
@@ -99,24 +99,23 @@ public class MenuActivity extends AppCompatActivity {
 
     private void adjustButtonVisibility(String role) {
         if ("Admin".equals(role)) {
-            // Admin can see all buttons
+
             buttonUserManagement.setVisibility(View.VISIBLE);
             buttonViewLoginHistory.setVisibility(View.VISIBLE);
             buttonStudentManagement.setVisibility(View.VISIBLE);
             buttonMyAccount.setVisibility(View.VISIBLE);
             buttonLogout.setVisibility(View.VISIBLE);
-        } else if ("User".equals(role)) {
-            // User can see all buttons except User Management and Login History
+        } else if ("Manager".equals(role)) {
+
             buttonUserManagement.setVisibility(View.GONE);
-            buttonViewLoginHistory.setVisibility(View.GONE);
+            buttonViewLoginHistory.setVisibility(View.VISIBLE);
             buttonStudentManagement.setVisibility(View.VISIBLE);
             buttonMyAccount.setVisibility(View.VISIBLE);
             buttonLogout.setVisibility(View.VISIBLE);
-        } else if ("Student".equals(role)) {
-            // Student can only see My Account and Logout
+        } else if ("Employee".equals(role)) {
             buttonUserManagement.setVisibility(View.GONE);
-            buttonViewLoginHistory.setVisibility(View.GONE);
-            buttonStudentManagement.setVisibility(View.GONE);
+            buttonViewLoginHistory.setVisibility(View.VISIBLE);
+            buttonStudentManagement.setVisibility(View.VISIBLE);
             buttonMyAccount.setVisibility(View.VISIBLE);
             buttonLogout.setVisibility(View.VISIBLE);
         } else {

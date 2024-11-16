@@ -37,7 +37,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         holder.age.setText(String.valueOf("Age: "+user.getAge()));
         holder.phone.setText("Phone: "+user.getPhone());
         holder.status.setText("Status: "+user.getStatus());
-
+        holder.role.setText("Role: "+user.getRole());
         holder.deleteButton.setOnClickListener(v -> {
             if (onUserDeleteClickListener != null) {
                 onUserDeleteClickListener.onUserDeleteClick(user);
@@ -57,7 +57,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     }
 
     static class UserViewHolder extends RecyclerView.ViewHolder {
-        TextView name, age, phone, status;
+        TextView name, age, phone, status, role;
         Button deleteButton, editButton;
 
         public UserViewHolder(View itemView) {
@@ -66,6 +66,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             age = itemView.findViewById(R.id.userAge);
             phone = itemView.findViewById(R.id.userPhone);
             status = itemView.findViewById(R.id.userStatus);
+            role = itemView.findViewById(R.id.role);
             deleteButton = itemView.findViewById(R.id.deleteButton);
             editButton = itemView.findViewById(R.id.editButton);
         }

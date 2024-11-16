@@ -24,7 +24,7 @@ public class MyAccountActivity extends AppCompatActivity {
 
     private ImageView profileImageView;
     private Button buttonChangeProfilePicture, buttonEditInfo;
-    private TextView nameTextView, ageTextView, phoneTextView, statusTextView;
+    private TextView nameTextView, ageTextView, phoneTextView ;
     private FirebaseAuth auth;
     private FirebaseFirestore db;
 
@@ -41,7 +41,7 @@ public class MyAccountActivity extends AppCompatActivity {
         nameTextView = findViewById(R.id.nameTextView);
         ageTextView = findViewById(R.id.ageTextView);
         phoneTextView = findViewById(R.id.phoneTextView);
-        statusTextView = findViewById(R.id.statusTextView);
+
         buttonEditInfo = findViewById(R.id.buttonEditInfo);
 
         auth = FirebaseAuth.getInstance();
@@ -49,6 +49,7 @@ public class MyAccountActivity extends AppCompatActivity {
 
         loadUserProfile();
 
+        checkUserRole();
         buttonEditInfo.setOnClickListener(v -> {
             Intent intent = new Intent(MyAccountActivity.this, EditInfoActivity.class);
             startActivityForResult(intent, EDIT_INFO_REQUEST);
@@ -77,12 +78,12 @@ public class MyAccountActivity extends AppCompatActivity {
                         String name = documentSnapshot.getString("name");
                         Long age = documentSnapshot.getLong("age");
                         String phone = documentSnapshot.getString("phone");
-                        String status = documentSnapshot.getString("status");
+
 
                         nameTextView.setText(name != null ? name : "N/A");
                         ageTextView.setText(age != null ? String.valueOf(age) : "N/A");
                         phoneTextView.setText(phone != null ? phone : "N/A");
-                        statusTextView.setText(status != null ? status : "N/A");
+
                     }
                 })
                 .addOnFailureListener(e -> Toast.makeText(MyAccountActivity.this, "Failed to load user information", Toast.LENGTH_SHORT).show());
@@ -136,4 +137,22 @@ public class MyAccountActivity extends AppCompatActivity {
             loadUserProfile();
         }
     }
+    private void checkUserRole() {
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser == null) return;
+
+        String userId = currentUser.getUid();
+
+        db.collection("users").document(userId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String role = documentSnapshot.getString("role");
+                        if (role != null && role.equalsIgnoreCase("Employee")) {
+                            buttonEditInfo.setVisibility(View.GONE); // Hide Edit Info for employees
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> Toast.makeText(MyAccountActivity.this, "Failed to check user role", Toast.LENGTH_SHORT).show());
+    }
+
 }

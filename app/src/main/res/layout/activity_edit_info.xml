@@ -4,12 +4,27 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp" />
+
 
     <EditText
         android:id="@+id/editName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Name" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Age"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp" />
+
 
     <EditText
         android:id="@+id/editAge"
@@ -18,6 +33,13 @@
         android:hint="Age"
         android:inputType="number" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Phone"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp" />
+
     <EditText
         android:id="@+id/editPhone"
         android:layout_width="match_parent"
@@ -25,21 +47,10 @@
         android:hint="Phone Number"
         android:inputType="phone" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Status"
-        android:textSize="16sp"
-        android:layout_marginTop="8dp" />
 
 
 
 
-    <Spinner
-        android:id="@+id/spinnerStatus"
-        android:layout_width="match_parent"
-        android:entries="@array/status_options"
-        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/saveButton"

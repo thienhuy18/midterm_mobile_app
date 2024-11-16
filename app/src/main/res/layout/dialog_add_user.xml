@@ -28,15 +28,33 @@
         android:inputType="phone"
         android:hint="Phone Number" />
 
-    <!-- Role Spinner -->
-    <Spinner
-        android:id="@+id/addRoleSpinner"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/role_options"
-        style="@style/CustomSpinnerStyle" />
+        android:text="Role"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:paddingTop="8dp" />
+
+
+
+    <!-- Role Spinner -->
 
     <!-- Status Spinner -->
+    <Spinner
+        android:id="@+id/addRoleSpinner"
+        style="@style/CustomSpinnerStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/role_options" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Status"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:paddingTop="8dp" />
+
+
     <Spinner
         android:id="@+id/addStatusSpinner"
         android:layout_width="match_parent"

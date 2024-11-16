@@ -20,6 +20,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -102,6 +104,7 @@ public class StudentManagementActivity extends AppCompatActivity {
 
 
         database = FirebaseFirestore.getInstance();
+        fetchUserRole();
         displayStudents();
 
 
@@ -263,8 +266,47 @@ public class StudentManagementActivity extends AppCompatActivity {
 
         btnInsertStudent.setOnClickListener(v -> {
             openFilePicker();
+
         });
     }
+
+
+    private void fetchUserRole() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = auth.getCurrentUser();
+
+        if (currentUser == null) return;
+
+        String userId = currentUser.getUid();
+        database.collection("users").document(userId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String role = documentSnapshot.getString("role");
+
+                        if ("Employee".equals(role)) {
+                            restrictActionsForStudents();
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Failed to fetch user role", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void restrictActionsForStudents() {
+        // Disable action buttons for students
+        btnAddStudent.setEnabled(false);
+        btnSave.setEnabled(false);
+        btnUpdate.setEnabled(false);
+        btnDeleteStudent.setEnabled(false);
+        btnDeleteCertificate.setEnabled(false);
+        btnAddCertificate.setEnabled(false);
+        btnInsertStudent.setEnabled(false);
+
+        // Optionally make them invisible or show a message
+        Toast.makeText(this, "You have view-only permissions.", Toast.LENGTH_LONG).show();
+    }
+
 
 
     private void openFilePicker() {
@@ -284,6 +326,8 @@ public class StudentManagementActivity extends AppCompatActivity {
             }
         }
     }
+
+
 
     private void readFile(Uri fileUri) {
         try {

@@ -6,6 +6,12 @@
     android:padding="16dp">
 
     <!-- Name EditText -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp" />
     <EditText
         android:id="@+id/editName"
         android:layout_width="match_parent"
@@ -13,6 +19,12 @@
         android:hint="Name" />
 
     <!-- Age EditText -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Age"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp" />
     <EditText
         android:id="@+id/editAge"
         android:layout_width="match_parent"
@@ -21,6 +33,12 @@
         android:hint="Age" />
 
     <!-- Phone Number EditText -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Phone"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp" />
     <EditText
         android:id="@+id/editPhone"
         android:layout_width="match_parent"
@@ -28,20 +46,32 @@
         android:inputType="phone"
         android:hint="Phone Number" />
 
-    <!-- Role Spinner -->
-    <Spinner
-        android:id="@+id/editRoleSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:entries="@array/role_options"
-        style="@style/CustomSpinnerStyle" />
 
-    <!-- Status Spinner -->
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp" />
     <Spinner
         android:id="@+id/editStatusSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:entries="@array/status_options"
+        style="@style/CustomSpinnerStyle" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Role"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp" />
+    <Spinner
+        android:id="@+id/editRoleSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/role_options"
         style="@style/CustomSpinnerStyle" />
 
 

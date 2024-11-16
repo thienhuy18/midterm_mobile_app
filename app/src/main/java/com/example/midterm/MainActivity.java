@@ -300,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.OnUse
 
     private void deleteFirebaseAuthUser(User user) {
         FirebaseUser currentUser = auth.getCurrentUser();
-        if (currentUser != null && currentUser.getUid().equals(user.getDocumentId())) {
+        if (currentUser != null ) {
             currentUser.delete()
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(MainActivity.this, "User deleted from Firebase Authentication", Toast.LENGTH_SHORT).show();
