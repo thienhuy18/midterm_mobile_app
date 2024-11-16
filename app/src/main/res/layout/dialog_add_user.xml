@@ -28,12 +28,21 @@
         android:inputType="phone"
         android:hint="Phone Number" />
 
+    <!-- Role Spinner -->
+    <Spinner
+        android:id="@+id/addRoleSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/role_options"
+        style="@style/CustomSpinnerStyle" />
+
     <!-- Status Spinner -->
     <Spinner
         android:id="@+id/addStatusSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/status_options" />
+        android:entries="@array/status_options"
+        style="@style/CustomSpinnerStyle" />
 
     <EditText
         android:id="@+id/addEmail"
@@ -48,7 +57,6 @@
         android:layout_height="wrap_content"
         android:hint="Password"
         android:inputType="textPassword" />
-
 
     <!-- Add Button -->
     <Button

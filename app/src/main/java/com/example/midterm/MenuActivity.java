@@ -2,6 +2,7 @@ package com.example.midterm;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
@@ -38,28 +40,45 @@ public class MenuActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         auth = FirebaseAuth.getInstance();
-        buttonMyAccount = findViewById(R.id.buttonMyAccount);
+        db = FirebaseFirestore.getInstance();
 
+        buttonMyAccount = findViewById(R.id.buttonMyAccount);
         buttonUserManagement = findViewById(R.id.buttonUserManagement);
         buttonStudentManagement = findViewById(R.id.buttonStudentManagement);
-
         buttonViewLoginHistory = findViewById(R.id.buttonViewLoginHistory);
         buttonLogout = findViewById(R.id.buttonLogout);
+
+        FirebaseUser currentUser = auth.getCurrentUser();
+
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            db.collection("users").document(userId).get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    String role = documentSnapshot.getString("role");
+                    adjustButtonVisibility(role);
+                } else {
+                    Toast.makeText(MenuActivity.this, "User data not found", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnFailureListener(e -> {
+                Toast.makeText(MenuActivity.this, "Failed to fetch user data", Toast.LENGTH_SHORT).show();
+            });
+        }
 
         buttonUserManagement.setOnClickListener(v -> {
             Intent intent = new Intent(MenuActivity.this, MainActivity.class);
             startActivity(intent);
         });
 
-
         buttonViewLoginHistory.setOnClickListener(v -> {
             Intent intent = new Intent(MenuActivity.this, LoginHistoryActivity.class);
             startActivity(intent);
         });
+
         buttonStudentManagement.setOnClickListener(v -> {
             Intent intent = new Intent(MenuActivity.this, StudentManagementActivity.class);
             startActivity(intent);
         });
+
         buttonMyAccount.setOnClickListener(v -> {
             Intent intent = new Intent(MenuActivity.this, MyAccountActivity.class);
             startActivity(intent);
@@ -76,6 +95,38 @@ public class MenuActivity extends AppCompatActivity {
         loadUserAvatar();
         listenForAvatarChanges();
 
+    }
+
+    private void adjustButtonVisibility(String role) {
+        if ("Admin".equals(role)) {
+            // Admin can see all buttons
+            buttonUserManagement.setVisibility(View.VISIBLE);
+            buttonViewLoginHistory.setVisibility(View.VISIBLE);
+            buttonStudentManagement.setVisibility(View.VISIBLE);
+            buttonMyAccount.setVisibility(View.VISIBLE);
+            buttonLogout.setVisibility(View.VISIBLE);
+        } else if ("User".equals(role)) {
+            // User can see all buttons except User Management and Login History
+            buttonUserManagement.setVisibility(View.GONE);
+            buttonViewLoginHistory.setVisibility(View.GONE);
+            buttonStudentManagement.setVisibility(View.VISIBLE);
+            buttonMyAccount.setVisibility(View.VISIBLE);
+            buttonLogout.setVisibility(View.VISIBLE);
+        } else if ("Student".equals(role)) {
+            // Student can only see My Account and Logout
+            buttonUserManagement.setVisibility(View.GONE);
+            buttonViewLoginHistory.setVisibility(View.GONE);
+            buttonStudentManagement.setVisibility(View.GONE);
+            buttonMyAccount.setVisibility(View.VISIBLE);
+            buttonLogout.setVisibility(View.VISIBLE);
+        } else {
+            // If role is null, only show My Account and Logout buttons
+            buttonUserManagement.setVisibility(View.GONE);
+            buttonViewLoginHistory.setVisibility(View.GONE);
+            buttonStudentManagement.setVisibility(View.GONE);
+            buttonMyAccount.setVisibility(View.VISIBLE);
+            buttonLogout.setVisibility(View.VISIBLE);
+        }
     }
     private void loadUserAvatar() {
         String userId = auth.getCurrentUser().getUid(); // Get the current user's ID
